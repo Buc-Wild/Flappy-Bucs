@@ -1,0 +1,1 @@
+document.body.innerHTML = "<h1>Hello World</h1>"; //just entering something basic for the first starting page
