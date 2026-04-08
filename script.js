@@ -1,1 +1,5 @@
-document.body.innerHTML = "<h1>Hello World</h1>"; //just entering something basic for the first starting page
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+ctx.fillStyle = "blue";
+ctx.fillRect(50, 50, 100, 100);
