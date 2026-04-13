@@ -21,6 +21,11 @@ class Buc {
     this.velocity += gravity;
     this.y += this.velocity;
 
+    if (this.y - this.height / 2 < 0) {
+      this.y = this.height / 2;
+      this.velocity = 0;
+    }
+
     if (this.y + this.height / 2 > canvasHeight) {
       this.y = canvasHeight - this.height / 2;
       this.dead = true;
