@@ -13,7 +13,7 @@ class Buc {
   }
 
   flap() {
-    this.velocity = -9;
+    this.velocity = -7;
   }
 
   // Called every frame — applies gravity and checks if Buc hit the ground
