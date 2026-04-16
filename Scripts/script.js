@@ -10,9 +10,8 @@ const planks = [];
 let lastSpawnTime = 0;
 const spawnDelay = 1500;
 
-
 // set gravity
-const GRAVITY = 0.5;
+const GRAVITY = 0.3;
 
 // Game state management
 const GAME_STATE = {
@@ -32,14 +31,8 @@ const startButton = {
   height: 50
 };
 
-// Canvas click event listener for menu and restart
-canvas.addEventListener("click", (event) => {
-  const rect = canvas.getBoundingClientRect();
-  const clickX = event.clientX - rect.left;
-  const clickY = event.clientY - rect.top;
-  
+function handleInput(clickX, clickY) {
   if (currentGameState === GAME_STATE.MENU) {
-    // Check if start button was clicked
     if (
       clickX > startButton.x - startButton.width / 2 &&
       clickX < startButton.x + startButton.width / 2 &&
@@ -48,8 +41,9 @@ canvas.addEventListener("click", (event) => {
     ) {
       startGame();
     }
+  } else if (currentGameState === GAME_STATE.PLAYING) {
+    buc.flap();
   } else if (currentGameState === GAME_STATE.GAME_OVER) {
-    // Check if restart button was clicked (same position as start button)
     if (
       clickX > startButton.x - startButton.width / 2 &&
       clickX < startButton.x + startButton.width / 2 &&
@@ -59,14 +53,40 @@ canvas.addEventListener("click", (event) => {
       resetGame();
     }
   }
+}
+
+// Desktop click
+canvas.addEventListener("click", (event) => {
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  handleInput(
+    (event.clientX - rect.left) * scaleX,
+    (event.clientY - rect.top) * scaleY
+  );
 });
 
-// Keyboard event listener to also allowww space bar to start game loop
+// Mobile touch
+canvas.addEventListener("touchstart", (event) => {
+  event.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const scaleX = canvas.width / rect.width;
+  const scaleY = canvas.height / rect.height;
+  const touch = event.touches[0];
+  handleInput(
+    (touch.clientX - rect.left) * scaleX,
+    (touch.clientY - rect.top) * scaleY
+  );
+}, { passive: false });
+
+// Keyboard
 document.addEventListener("keydown", (event) => {
   if (event.key === " " || event.code === "Space") {
     event.preventDefault();
     if (currentGameState === GAME_STATE.MENU) {
       startGame();
+    } else if (currentGameState === GAME_STATE.PLAYING) {
+      buc.flap();
     } else if (currentGameState === GAME_STATE.GAME_OVER) {
       resetGame();
     }
@@ -74,27 +94,19 @@ document.addEventListener("keydown", (event) => {
 });
 
 //gameloop function
-function gameLoop(timestamp) 
-{
-    updateGame(timestamp);    
-    // update physics only when playing
-    if (currentGameState === GAME_STATE.PLAYING) {
-      buc.update(GRAVITY, canvas.height);
-    }
-    
-    // Check game state
-    checkGameState();
-    
-    // draw the game
-    drawGame()
-    // loop game frames
-    requestAnimationFrame(gameLoop);
+function gameLoop(timestamp) {
+  updateGame(timestamp);
+  if (currentGameState === GAME_STATE.PLAYING) {
+    buc.update(GRAVITY, canvas.height);
+  }
+  checkGameState();
+  drawGame();
+  requestAnimationFrame(gameLoop);
 }
 requestAnimationFrame(gameLoop);
 
 function checkGameState() {
   if (currentGameState === GAME_STATE.PLAYING) {
-    // Check if Buc hit the ground or ceiling (already handled in buc.update)
     if (buc.dead) {
       currentGameState = GAME_STATE.GAME_OVER;
     }
@@ -121,34 +133,24 @@ function startGame() {
   currentGameState = GAME_STATE.PLAYING;
 }
 
-function drawGame()
-{
-    //clear the canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    //sets the background image
-    ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
-    
-    for(let plank of planks)
-    {
-        plank.draw(ctx, canvas.height);
-    } 
-    buc.draw(ctx);
-    
-    // Draw UI
-    drawUI();
+function drawGame() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(background, 0, 0, canvas.width, canvas.height);
+  for (let plank of planks) {
+    plank.draw(ctx, canvas.height);
+  }
+  buc.draw(ctx);
+  drawUI();
 }
 
 function drawUI() {
   if (currentGameState === GAME_STATE.MENU) {
     ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
     ctx.fillStyle = "white";
     ctx.font = "50px Arial";
     ctx.textAlign = "center";
     ctx.fillText("FLAPPY BUCS", canvas.width / 2, canvas.height / 2 - 100);
-    
-    // Draw start button
     ctx.fillStyle = "#4CAF50";
     ctx.fillRect(
       startButton.x - startButton.width / 2,
@@ -156,22 +158,17 @@ function drawUI() {
       startButton.width,
       startButton.height
     );
-    
     ctx.fillStyle = "white";
     ctx.font = "24px Arial";
     ctx.fillText("START", startButton.x, startButton.y + 8);
-    
     ctx.textAlign = "left";
   } else if (currentGameState === GAME_STATE.GAME_OVER) {
     ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
     ctx.fillStyle = "white";
     ctx.font = "40px Arial";
     ctx.textAlign = "center";
     ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 40);
-    
-    // Draw restart button
     ctx.fillStyle = "#FF5722";
     ctx.fillRect(
       startButton.x - startButton.width / 2,
@@ -179,33 +176,26 @@ function drawUI() {
       startButton.width,
       startButton.height
     );
-    
     ctx.fillStyle = "white";
     ctx.font = "24px Arial";
     ctx.fillText("RESTART", startButton.x, startButton.y + 8);
-    
     ctx.textAlign = "left";
   }
 }
 
-function spawnPlank()
-{
-    planks.push(new Plank(canvas.width, canvas.height));
+function spawnPlank() {
+  planks.push(new Plank(canvas.width, canvas.height));
 }
 
-
-function updateGame(timestamp) 
-{
+function updateGame(timestamp) {
   if (currentGameState === GAME_STATE.PLAYING) {
     if (timestamp - lastSpawnTime > spawnDelay) {
       spawnPlank();
       lastSpawnTime = timestamp;
     }
-
     for (let plank of planks) {
       plank.update();
     }
-
     for (let i = planks.length - 1; i >= 0; i--) {
       if (planks[i].isOffScreen()) {
         planks.splice(i, 1);
