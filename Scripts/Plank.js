@@ -34,9 +34,20 @@ class Plank
     ctx.fillRect(this.x, bottomY, this.width, bottomHeight);
   }//draw()
 
-  isOffScreen() 
+  isOffScreen()
   {
     return this.x + this.width < 0;
   }//isOffScreen()
-  
+
+  collidesWith(buc)
+  {
+    const bucLeft = buc.x - buc.width / 2;
+    const bucRight = buc.x + buc.width / 2;
+    const bucTop = buc.y - buc.height / 2;
+    const bucBottom = buc.y + buc.height / 2;
+
+    if (bucRight <= this.x || bucLeft >= this.x + this.width) return false;
+    return bucTop <= this.topHeight || bucBottom >= this.topHeight + this.gap;
+  }//collidesWith()
+
 }
