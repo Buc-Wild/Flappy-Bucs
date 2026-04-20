@@ -8,6 +8,7 @@ const buc = new Buc(150, 350);
 //plank variables
 const planks = [];
 let lastSpawnTime = 0;
+let score = 0;
 const spawnDelay = 1500;
 
 // set gravity
@@ -120,6 +121,7 @@ function resetGame() {
   buc.dead = false;
   planks.length = 0;
   lastSpawnTime = 0;
+  score = 0;
   currentGameState = GAME_STATE.PLAYING;
 }
 
@@ -130,6 +132,7 @@ function startGame() {
   buc.dead = false;
   planks.length = 0;
   lastSpawnTime = 0;
+  score = 0;
   currentGameState = GAME_STATE.PLAYING;
 }
 
@@ -169,6 +172,7 @@ function drawUI() {
     ctx.font = "40px Arial";
     ctx.textAlign = "center";
     ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 40);
+    ctx.fillText("Score: " + score, canvas.width / 2, canvas.height / 2 - 80);
     ctx.fillStyle = "#FF5722";
     ctx.fillRect(
       startButton.x - startButton.width / 2,
@@ -179,6 +183,12 @@ function drawUI() {
     ctx.fillStyle = "white";
     ctx.font = "24px Arial";
     ctx.fillText("RESTART", startButton.x, startButton.y + 8);
+    ctx.textAlign = "left";
+  } else if (currentGameState === GAME_STATE.PLAYING) {
+    ctx.fillStyle = "white";
+    ctx.font = "32px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText(score, canvas.width / 2, 50);
     ctx.textAlign = "left";
   }
 }
@@ -195,6 +205,10 @@ function updateGame(timestamp) {
     }
     for (let plank of planks) {
       plank.update();
+      if (!plank.scored && buc.x > plank.x + plank.width) {
+        plank.scored = true;
+        score++;
+      }
       if (plank.collidesWith(buc)) {
         buc.dead = true;
       }
