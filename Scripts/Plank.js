@@ -6,7 +6,7 @@ class Plank
     this.gap = 140;
     this.speed = 3;
     this.x = canvasWidth;
-
+    this.scored = false;
     const minTop = 50;
     const maxTop = canvasHeight - this.gap - 50;
 
