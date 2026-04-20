@@ -209,6 +209,9 @@ function updateGame(timestamp) {
         plank.scored = true;
         score++;
       }
+      if (plank.collidesWith(buc)) {
+        buc.dead = true;
+      }
     }
     for (let i = planks.length - 1; i >= 0; i--) {
       if (planks[i].isOffScreen()) {
