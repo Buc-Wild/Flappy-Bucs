@@ -6,6 +6,7 @@ class Buc {
     this.dead = false;
     this.width = 50;
     this.height = 50;
+    this.terminalVelocity = 10;
 
     // Load Buc's sprite
     this.image = new Image();
@@ -13,12 +14,15 @@ class Buc {
   }
 
   flap() {
-    this.velocity = -7;
+    this.velocity = -8;
   }
 
   // Called every frame — applies gravity and checks if Buc hit the ground
   update(gravity, canvasHeight) {
     this.velocity += gravity;
+    if (this.velocity > this.terminalVelocity) {
+      this.velocity = this.terminalVelocity;
+    }
     this.y += this.velocity;
 
     if (this.y - this.height / 2 < 0) {
