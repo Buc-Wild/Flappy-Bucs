@@ -114,6 +114,7 @@ class GameManager {
   
   updateGame(timestamp) {
     if (this.currentGameState === this.GAME_STATE.PLAYING) {
+      ground.update();
       if (timestamp - this.lastSpawnTime > this.spawnDelay) {
         this.spawnPlank();
         this.lastSpawnTime = timestamp;
