@@ -8,6 +8,7 @@ class GameManager {
     this.planks = [];
     this.lastSpawnTime = 0;
     this.score = 0;
+    this.highScore = 0;
     this.spawnDelay = 1500;
 
     // set gravity
@@ -91,6 +92,12 @@ class GameManager {
     this.buc.flap();
   }
 
+  updateHighScore() {
+    if (this.score > this.highScore) {
+      this.highScore = this.score;
+    }
+  }
+
   handleInput(inputType, isButtonClicked = false) {
     if (this.currentGameState === this.GAME_STATE.MENU) {
       if (isButtonClicked) {
@@ -124,6 +131,7 @@ class GameManager {
         if (!plank.scored && this.buc.x > plank.x + plank.width) {
           plank.scored = true;
           this.score++;
+          this.updateHighScore();
         }
         if (plank.collidesWith(this.buc)) {
           this.buc.dead = true;
