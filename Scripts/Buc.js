@@ -26,8 +26,8 @@ class Buc {
       this.velocity = 0;
     }
 
-    if (this.y + this.height / 2 > canvasHeight) {
-      this.y = canvasHeight - this.height / 2;
+    if (this.y + this.height / 2 > canvasHeight - 60) {
+      this.y = canvasHeight - 60 - this.height / 2;
       this.dead = true;
     }
   }

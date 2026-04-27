@@ -3,6 +3,7 @@ const ctx = canvas.getContext("2d");
 
 const background = new Image();
 background.src = "assets/Back.png";
+const ground = new Ground(canvas.width, canvas.height);
 
 
 // Initialize core game objects.
@@ -79,6 +80,7 @@ function drawGame() {
   for (let plank of gameManager.planks) {
     plank.draw(ctx, canvas.height);
   }
+  ground.draw(ctx);
   buc.draw(ctx);
   uiManager.draw(ctx, gameManager.currentGameState, gameManager.score);
 }
