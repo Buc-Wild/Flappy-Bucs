@@ -82,7 +82,12 @@ function drawGame() {
   }
   ground.draw(ctx);
   buc.draw(ctx);
-  uiManager.draw(ctx, gameManager.currentGameState, gameManager.score);
+  uiManager.draw(
+    ctx,
+    gameManager.currentGameState,
+    gameManager.score,
+    gameManager.highScore
+  );
 }
 
 // Initializes the game loop by passing in the render function.
