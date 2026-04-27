@@ -11,7 +11,7 @@ class GameManager {
     this.spawnDelay = 1500;
 
     // set gravity
-    this.GRAVITY = 0.3;
+    this.GRAVITY = 0.5;
 
     // Game state management
     this.GAME_STATE = {
