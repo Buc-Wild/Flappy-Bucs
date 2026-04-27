@@ -8,7 +8,7 @@ class Plank
     this.x = canvasWidth;
     this.scored = false;
     const minTop = 50;
-    const maxTop = canvasHeight - this.gap - 50;
+    const maxTop = canvasHeight - this.gap - 80;
 
     this.topHeight =
       Math.floor(Math.random() * (maxTop - minTop + 1)) + minTop;
@@ -29,7 +29,7 @@ class Plank
 
     // bottom plank
     const bottomY = this.topHeight + this.gap;
-    const bottomHeight = canvasHeight - bottomY;
+    const bottomHeight = canvasHeight - 60 - bottomY;
 
     ctx.fillRect(this.x, bottomY, this.width, bottomHeight);
   }//draw()
