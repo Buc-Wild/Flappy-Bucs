@@ -35,9 +35,9 @@ class Plank
     ctx.fillRect(this.x, bottomY, this.width, bottomHeight);
 
     // debug hitbox
-    // ctx.strokeStyle = "blue";
-    // ctx.strokeRect(this.x + this.plankInsetX, 0, this.width - this.plankInsetX * 2, this.topHeight);
-    // ctx.strokeRect(this.x + this.plankInsetX, bottomY, this.width - this.plankInsetX * 2, bottomHeight);
+    ctx.strokeStyle = "blue";
+    ctx.strokeRect(this.x + this.plankInsetX, 0, this.width - this.plankInsetX * 2, this.topHeight);
+    ctx.strokeRect(this.x + this.plankInsetX, bottomY, this.width - this.plankInsetX * 2, bottomHeight);
   }//draw()
 
   isOffScreen()
