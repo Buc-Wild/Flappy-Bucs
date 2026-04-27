@@ -5,6 +5,7 @@ class Plank
     this.width = 80;
     this.gap = 140;
     this.speed = 3;
+    this.plankInsetX = 2;
     this.x = canvasWidth;
     this.scored = false;
     const minTop = 50;
@@ -32,6 +33,11 @@ class Plank
     const bottomHeight = canvasHeight - bottomY;
 
     ctx.fillRect(this.x, bottomY, this.width, bottomHeight);
+
+    // debug hitbox
+    // ctx.strokeStyle = "blue";
+    // ctx.strokeRect(this.x + this.plankInsetX, 0, this.width - this.plankInsetX * 2, this.topHeight);
+    // ctx.strokeRect(this.x + this.plankInsetX, bottomY, this.width - this.plankInsetX * 2, bottomHeight);
   }//draw()
 
   isOffScreen()
@@ -41,13 +47,15 @@ class Plank
 
   collidesWith(buc)
   {
-    const bucLeft = buc.x - buc.width / 2;
-    const bucRight = buc.x + buc.width / 2;
-    const bucTop = buc.y - buc.height / 2;
-    const bucBottom = buc.y + buc.height / 2;
+    const hitW = buc.width  * 0.5;
+    const hitH = buc.height * 0.5;
 
-    if (bucRight <= this.x || bucLeft >= this.x + this.width) return false;
+    const bucLeft   = buc.x - hitW / 2;
+    const bucRight  = buc.x + hitW / 2;
+    const bucTop    = buc.y - hitH / 2;
+    const bucBottom = buc.y + hitH / 2;
+
+    if (bucRight <= this.x + this.plankInsetX || bucLeft >= this.x + this.width - this.plankInsetX) return false;
     return bucTop <= this.topHeight || bucBottom >= this.topHeight + this.gap;
   }//collidesWith()
-
 }
